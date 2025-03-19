@@ -1,0 +1,7 @@
+como o nome diz, é responsável pelos casos de uso da aplicação, pela lógica de caso de uso
+sao funcionalidades
+criação de um candidato
+upload do curriculo
+
+a prof disse que isso é uma camada de serviço, poderia ter qualquer nome, e exemplificou o 'service'.
+isso bate com os outros projetos usando Service como padrão
