@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.service.annotation.PostExchange;
-import rocketseat.gestao_vagas.exeptions.UsernameEmailAlreadyExistsException;
 import rocketseat.gestao_vagas.modules.company.entities.CompanyEntity;
 import rocketseat.gestao_vagas.modules.company.useCases.CreateCompanyUseCase;
 
