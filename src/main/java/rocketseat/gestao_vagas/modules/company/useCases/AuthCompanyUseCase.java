@@ -38,7 +38,7 @@ public class AuthCompanyUseCase {
 
         //se não for igual -> Erro
         if (!passwordMatches) {
-            throw new AuthenticationException();
+            throw new AuthenticationException("Username/Password Incorrect");
         }
         //se for igual -> Gerar o token
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
