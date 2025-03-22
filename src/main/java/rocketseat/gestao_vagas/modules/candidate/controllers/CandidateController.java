@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rocketseat.gestao_vagas.exeptions.UsernameEmailAlreadyExistsException;
 import rocketseat.gestao_vagas.modules.candidate.CandidateEntity;
@@ -26,6 +27,7 @@ public class CandidateController {
     private ProfileCandidateUseCase profileCandidateUseCase;
 
     @PostMapping("/")
+    @PreAuthorize("hasRole('CANDIDATE')")
     public ResponseEntity<Object> create(@Valid @RequestBody CandidateEntity candidateEntity) {
         try {
             var result = this.createCandidateUseCase.execute(candidateEntity);

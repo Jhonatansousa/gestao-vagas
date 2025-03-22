@@ -9,11 +9,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import rocketseat.gestao_vagas.modules.company.dto.AuthCompanyDTO;
+import rocketseat.gestao_vagas.modules.company.dto.AuthCompanyResponseDTO;
 import rocketseat.gestao_vagas.modules.company.repositories.CompanyRepository;
 
 import javax.naming.AuthenticationException;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
 
 @Service
 public class AuthCompanyUseCase {
@@ -27,7 +29,7 @@ public class AuthCompanyUseCase {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public String execute(AuthCompanyDTO authCompanyDTO) throws AuthenticationException {
+    public AuthCompanyResponseDTO execute(AuthCompanyDTO authCompanyDTO) throws AuthenticationException {
 
         var company = companyRepository.findByUsername(authCompanyDTO.username()).orElseThrow(() -> {
                     throw new UsernameNotFoundException("Username/Password Incorrect");
@@ -42,13 +44,22 @@ public class AuthCompanyUseCase {
         }
         //se for igual -> Gerar o token
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
+
+        var expiresIn = Instant.now().plus(Duration.ofHours(2));
+
         var token = JWT.create().withIssuer("javagas")
-                //adicionando tempo de expiração (2horas)
-                .withExpiresAt(Instant.now().plus(Duration.ofHours(2)))
                 .withSubject(company.getId().toString())
+                .withExpiresAt(expiresIn)
+                .withClaim("roles", Arrays.asList("COMPANY"))
                 .sign(algorithm);
 
-        return token;
+        var authCompanyResponseDTO = AuthCompanyResponseDTO.builder()
+                .access_token(token)
+                .expires_in(expiresIn.toEpochMilli())
+                .build();
+
+
+        return authCompanyResponseDTO;
     }
 
 }

@@ -4,6 +4,7 @@ package rocketseat.gestao_vagas.modules.company.controllers;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +16,7 @@ import rocketseat.gestao_vagas.modules.company.useCases.CreateJobUseCase;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/job")
+@RequestMapping("/company/job")
 public class JobController {
 
     @Autowired
@@ -23,6 +24,7 @@ public class JobController {
 
     //companyId recebe o objeto do request e eu transformo em uma String, e depois transformo em um UUID a partir de uma string
     @PostMapping("/")
+    @PreAuthorize("hasRole('COMPANY')")
     public JobEntity create(@Valid @RequestBody CreateJobDTO createJobDTO, HttpServletRequest request) {
         var companyId = request.getAttribute("company_id");
         //jobEntity.setCompanyId(UUID.fromString(companyId.toString()));
