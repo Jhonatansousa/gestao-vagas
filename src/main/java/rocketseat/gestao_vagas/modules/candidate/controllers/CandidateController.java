@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import rocketseat.gestao_vagas.exeptions.UsernameEmailAlreadyExistsException;
 import rocketseat.gestao_vagas.modules.candidate.CandidateEntity;
 import rocketseat.gestao_vagas.modules.candidate.dto.ProfileCandidateResponseDTO;
+import rocketseat.gestao_vagas.modules.candidate.useCases.ApplyJobCandidateUseCase;
 import rocketseat.gestao_vagas.modules.candidate.useCases.CreateCandidateUseCase;
 import rocketseat.gestao_vagas.modules.candidate.useCases.ListAllJobsByFilterUseCase;
 import rocketseat.gestao_vagas.modules.candidate.useCases.ProfileCandidateUseCase;
@@ -41,6 +42,9 @@ public class CandidateController {
     private ProfileCandidateUseCase profileCandidateUseCase;
 
     private final ListAllJobsByFilterUseCase listAllJobsByFilterUseCase;
+
+    @Autowired
+    private ApplyJobCandidateUseCase applyJobCandidateUseCase;
 
     @PostMapping("/")
     @PreAuthorize("hasRole('CANDIDATE')")
@@ -105,5 +109,30 @@ public class CandidateController {
     public List<JobEntity> findJobByFilter(@RequestParam String filter) {
 
         return this.listAllJobsByFilterUseCase.execute(filter);
+    }
+
+
+
+
+
+    @PostMapping("/job/apply")
+    @PreAuthorize("hasRole('CANDIDATE')")
+    @Operation(
+            summary = "Inscrição do candidato para uma vaga",
+            description = "Método responsável por inscrever o candidato em uma vaga"
+    )
+    @SecurityRequirement(name = "jwt_auth")
+    public ResponseEntity<Object> applyJob(HttpServletRequest request, @RequestBody UUID idJob) {
+
+
+        var idCandidate = request.getAttribute("candidate_id");
+
+        try {
+            var result = this.applyJobCandidateUseCase.execute(UUID.fromString(idCandidate.toString()), idJob);
+            return ResponseEntity.ok().body(result);
+        } catch (Exception er) {
+            return ResponseEntity.badRequest().body(er.getMessage());
+        }
+
     }
 }
