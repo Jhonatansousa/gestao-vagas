@@ -1,3 +1,12 @@
+networks:
+  gestaovagasprometheus-network:
+    #driver padrão, tem outros drivers de rede
+    driver: bridge
+
+volumes:
+  prometheus_data:
+
+
 services:
   postgres:
     container_name: gestao_vagas_postgres
@@ -8,3 +17,14 @@ services:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
       - POSTGRES_DB=gestao_vagas
+
+  prometheus:
+    container_name: prometheus_gestao_vagas
+    image: prom/prometheus:latest
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    networks:
+      - gestaovagasprometheus-network
+    ports:
+      - "9090:9090"
