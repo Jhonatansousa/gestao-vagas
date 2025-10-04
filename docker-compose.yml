@@ -5,6 +5,7 @@ networks:
 
 volumes:
   prometheus_data:
+  grafana_data:
 
 
 services:
@@ -28,3 +29,11 @@ services:
       - gestaovagasprometheus-network
     ports:
       - "9090:9090"
+
+  grafana:
+    container_name: grafana_gestao_vagas
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    networks:
+      - gestaovagasprometheus-network
