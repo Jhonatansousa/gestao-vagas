@@ -32,7 +32,7 @@ services:
 
   grafana:
     container_name: grafana_gestao_vagas
-    image: grafana/grafana:latest
+    image: grafana/grafana:latesta
     ports:
       - "3000:3000"
     networks:
